@@ -1,5 +1,7 @@
 import React, {createContext, type FC, useReducer} from "react";
 import initialGraph from '../data_graphs/miserables.json';
+import {clusters} from "graphology-generators/random";
+import Graph from "graphology";
 // import type {Props} from "next/script";
 
 
@@ -58,6 +60,9 @@ export function graphDataReducer(state: any, action: GraphDataAction) {
     }
 }
 function collapseGroupOfNode(state: any, group: number) {
+
+    console.log(state)
+
     var old_nodes = state.force_graph.nodes;
     var old_links = state.force_graph.links;
 
@@ -119,6 +124,8 @@ function collapseGroupOfNode(state: any, group: number) {
         links: new_links
     }
 }
+
+// TODO: Expansion is creating Multiple links.
 function expandGroupNode(state: any, group_to_expand: number, group_to_expand_id: string ,group_map: Map<number,boolean>){
     const old_nodes = state.force_graph.nodes;
     const old_links = state.force_graph.links;
@@ -332,9 +339,47 @@ const graphContextInitializer = (initialState: any) => {
         if(!expanded_map.has(node.group)) expanded_map.set(node.group, false);
     }
 
+    // @ts-ignore
+    let nodes = []
+    let edges = []
+
+    const graph = clusters(Graph, {
+        order: 50,
+        size: 75,
+        clusters: 10,
+    })
+
+    graph.forEachNode( node => {
+        graph.updateNode(node, attributes => {
+            return {
+                ...attributes,
+                id: node,
+                name: node + 'name',
+                val: 1,
+                nodeVisibility: true
+            }
+        })
+    })
+
+    graph.forEachNode( node => {
+        nodes.push(graph.getNodeAttributes(node))
+    })
+
+    // graph.forEachEdge(edge => {
+    //     console.log(edge)
+    // })
+
+
+    const graphology_test = {
+        // @ts-ignore
+        nodes: nodes,
+        // @ts-ignore
+        links: []
+    }
+
     return {
         initialGraphData: initialGraph,
-        graph: initialState,
+        graph: graph,
         force_graph: createNetworkGraph(initialGraph, []),
         expanded_graphs: expanded_map
     }
@@ -345,8 +390,6 @@ export const GraphProvider: FC<Props> = ({ children }) => {
 
     function initialArgs(): any {
         return {
-            graph: null,
-            force_graph: null,
         };
     }
 

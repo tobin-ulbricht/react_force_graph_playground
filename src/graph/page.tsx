@@ -33,23 +33,31 @@ function Graph({}, ref: any) {
 
     }, [dispatch]);
 
-    const test = useCallback((node: { id: string; x: number; y: number; z: number; collapsed: boolean; }) => {
+    const test = useCallback((node: {
+        nodeVisibility: any; id: string; x: number; y: number; z: number; collapsed: boolean; }) => {
+        graphContext.graph.setNodeAttribute(node.id, 'nodeVisibility', !node.nodeVisibility);
+    }, []);
+
+    const linkClick = useCallback((node: { id: string; x: number; y: number; z: number; collapsed: boolean; }) => {
         console.log(node)
     }, []);
+
     return (
-        <>
             <ForceGraph3D
                 ref={ref}
                 graphData={graphContext.force_graph}
                 nodeLabel="id"
+                // nodeVisibility={(node) => {
+                //     return node.nodeVisibility;
+                // }}
                 nodeVal="nodeVal"
                 nodeAutoColorBy="group"
                 onNodeClick={handleClick}
-                onNodeRightClick={test}
+                // onNodeRightClick={(node) => {
+                //     node.nodeVisibility = node.nodeVisibility!;
+                // }}
+                // onLinkClick={linkClick}
             />
-
-        </>
-
     );
 }
 

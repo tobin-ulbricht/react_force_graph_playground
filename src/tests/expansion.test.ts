@@ -1,14 +1,14 @@
 import Graph from 'graphology';
 import {clusters} from 'graphology-generators/random';
 
-//
+
 
 function expand(order: number, size: number, cluster: number) {
 
     const graph = clusters(Graph, {
         order: order,
         size: size,
-        clusters: cluster
+        clusters: cluster,
     })
 
     // convert graph into a force-graph-compatible structure, this func should accept a list of nodes and links? Define a minimum input necessary, ie. group or other values
@@ -24,7 +24,9 @@ function expand(order: number, size: number, cluster: number) {
 export {}
 describe('testing group expansion', () => {
 
-    // test('empty string should result in zero', () => {
-    //     expect(expand().nodes()).toHaveLength(100)
-    // });
+    const expected_length: number = 50;
+
+    test('empty string should result in zero', () => {
+        expect(expand(expected_length,250,7).nodes()).toHaveLength(expected_length)
+    });
 });

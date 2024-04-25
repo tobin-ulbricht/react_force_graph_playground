@@ -1,20 +1,8 @@
 // create constructor that accepts les miserables
 // constructor should init with collapsed or expanded state
+import {UndirectedGraph} from "graphology";
 
-class link {
-
-}
-class node {
-
-}
-
-class node_community {
-
-}
-
-class StateGraph {
-// need a map of collapsed communities
-
-}
-
-export {StateGraph}
+// class Graph extends UndirectedGraph {
+//     expandedCommunities:
+// }
+export {}
