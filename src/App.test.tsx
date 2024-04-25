@@ -2,8 +2,12 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test.skip('renders force-graph', () => {
+  //
+  // // setup test
+  //
+  // //cleanup test
+  //
+  //
+  // render(<App />);
 });

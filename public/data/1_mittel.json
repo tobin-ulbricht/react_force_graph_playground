@@ -1,0 +1,38 @@
+{
+  "nodes": [
+    {
+      "id": "1000 und 1 Buch",
+      "group": 0
+    },
+    {
+      "id": "Acta Germanica",
+      "group": 0
+    },
+    {
+      "id": "Acta neophilologica",
+      "group": 1
+    },
+    {
+      "id": "Akzente",
+      "group": 2
+    },
+    {
+      "id": "Allegoria",
+      "group": 3
+    }
+  ],
+  "links": [
+    {
+      "attributes": {},
+      "source": "1000 und 1 Buch",
+      "target": "Acta Germanica",
+      "value": 4
+    },
+    {
+      "attributes": {},
+      "source": "1000 und 1 Buch",
+      "target": "Acta neophilologica",
+      "value": 5
+    }
+  ]
+}

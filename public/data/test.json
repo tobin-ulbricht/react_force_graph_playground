@@ -1,0 +1,15 @@
+{
+	"nodes": [
+	{"id": "two", "group": 1},
+	{"id": "three", "group": 1},
+	{"id": "four", "group": 2},
+	{"id": "five", "group": 2},
+	{"id": "six", "group": 2},
+	{"id": "seven", "group": 2},
+	{"id": "eight", "group": 3},
+	{"id": "nine", "group": 3}
+	],
+	"links": [
+
+	]
+}
