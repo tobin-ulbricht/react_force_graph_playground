@@ -37,7 +37,7 @@ export function graphDataReducer(state: any, action: GraphDataAction) {
         }
         case "expand_graph_node": {
             //Update the expanded Graphs Mapping
-            var new_expanded_graphs: Map<number,boolean> = new Map(state.expanded_graphs)
+            var new_expanded_graphs: Map<number, boolean> = new Map(state.expanded_graphs)
             new_expanded_graphs.set(action.payload.group, true)
             return {
                 ...state,
@@ -46,7 +46,7 @@ export function graphDataReducer(state: any, action: GraphDataAction) {
             }
         }
         case "collapse_graph_node": {
-            var new_expanded_graphs_w: Map<number,boolean> = new Map(state.expanded_graphs)
+            var new_expanded_graphs_w: Map<number, boolean> = new Map(state.expanded_graphs)
             new_expanded_graphs_w.set(action.payload.group, false)
             return {
                 ...state,
@@ -59,9 +59,8 @@ export function graphDataReducer(state: any, action: GraphDataAction) {
         }
     }
 }
-function collapseGroupOfNode(state: any, group: number) {
 
-    console.log(state)
+function collapseGroupOfNode(state: any, group: number) {
 
     var old_nodes = state.force_graph.nodes;
     var old_links = state.force_graph.links;
@@ -73,7 +72,7 @@ function collapseGroupOfNode(state: any, group: number) {
 
     // determine nodes
     for (var i = 0; i < old_nodes.length; i++) {
-        var old_node:nodeType = old_nodes[i]
+        var old_node: nodeType = old_nodes[i]
 
         //do not pass old nodes into new nodes, create a new group node.
         //how to ensure that the new node group Id's are not conflicting?
@@ -82,7 +81,7 @@ function collapseGroupOfNode(state: any, group: number) {
         if (old_node.group === group) {
             // @ts-ignore
             new_group_node.nodes.push(old_node);
-            new_group_node.size ++;
+            new_group_node.size++;
         } else {
             new_nodes.push(old_node);
         }
@@ -95,26 +94,26 @@ function collapseGroupOfNode(state: any, group: number) {
         var source = old_link.source.id;
         var target = old_link.target.id;
 
-        if(!group_child_nodes.includes(source) && !group_child_nodes.includes(target)) {
+        if (!group_child_nodes.includes(source) && !group_child_nodes.includes(target)) {
             new_links.push(old_link)
         } else {
-            if(source !== new_group_node.id && !group_child_nodes.includes(source)) {
+            if (source !== new_group_node.id && !group_child_nodes.includes(source)) {
                 var new_link = {
                     source: source,
                     target: new_group_node.id,
                     value: 0
                 }
                 // @ts-ignore
-                if(!new_links.includes(new_link)) new_links.push(new_link)
+                if (!new_links.includes(new_link)) new_links.push(new_link)
             }
-            if(group_child_nodes.includes(source) && !group_child_nodes.includes(target)){
+            if (group_child_nodes.includes(source) && !group_child_nodes.includes(target)) {
                 new_link = {
                     source: new_group_node.id,
                     target: target,
                     value: 0
                 }
                 // @ts-ignore
-                if(!new_links.includes(new_link)) new_links.push(new_link)
+                if (!new_links.includes(new_link)) new_links.push(new_link)
             }
         }
     }
@@ -126,7 +125,7 @@ function collapseGroupOfNode(state: any, group: number) {
 }
 
 // TODO: Expansion is creating Multiple links.
-function expandGroupNode(state: any, group_to_expand: number, group_to_expand_id: string ,group_map: Map<number,boolean>){
+function expandGroupNode(state: any, group_to_expand: number, group_to_expand_id: string, group_map: Map<number, boolean>) {
     const old_nodes = state.force_graph.nodes;
     const old_links = state.force_graph.links;
 
@@ -141,7 +140,7 @@ function expandGroupNode(state: any, group_to_expand: number, group_to_expand_id
     for (let i = 0; i < old_nodes.length; i++) {
 
         //If a group is already expanded. there are no child nodes....
-        if(old_nodes[i].group === group_to_expand) {
+        if (old_nodes[i].group === group_to_expand) {
             //group node we want to expand
             // @ts-ignore
             group_node_ids = old_nodes[i].nodes.map(nodes => nodes.id)
@@ -162,9 +161,9 @@ function expandGroupNode(state: any, group_to_expand: number, group_to_expand_id
     for (let i = 0; i < old_links.length; i++) {
 
         //do not parse links that have the same source and origin.
-        if(old_links[i].target !== old_links[i].source) {
+        if (old_links[i].target !== old_links[i].source) {
             //push all links that do not target or source from an expanded group
-            if(old_links[i].target.group !== group_to_expand && old_links[i].source.group !== group_to_expand) {
+            if (old_links[i].target.group !== group_to_expand && old_links[i].source.group !== group_to_expand) {
                 const new_link = {
                     source: old_links[i].source,
                     target: old_links[i].target,
@@ -193,7 +192,7 @@ function expandGroupNode(state: any, group_to_expand: number, group_to_expand_id
             new_links.push(new_link)
         } else {
             //Links that target the group, or other groups
-            if(group_node_ids.includes(link.target)) {
+            if (group_node_ids.includes(link.target)) {
                 // @ts-ignore
                 var source_group = new_nodes.find(node => node.group === initialGraph.nodes.find(node => node.id === link.source).group);
                 var source_group_id = "group" + source_group.group.toString()
@@ -202,11 +201,11 @@ function expandGroupNode(state: any, group_to_expand: number, group_to_expand_id
                     target: link.target,
                     value: link.value
                 }
-                if(group_map.get(source_group.group)) new_link.source = link.source
+                if (group_map.get(source_group.group)) new_link.source = link.source
                 new_links.push(new_link)
             }
 
-            if(group_node_ids.includes(link.source)) {
+            if (group_node_ids.includes(link.source)) {
                 // @ts-ignore
                 var target_group = new_nodes.find(node => node.group === initialGraph.nodes.find(node => node.id === link.target).group);
                 var target_group_id = "group" + target_group.group.toString()
@@ -215,13 +214,13 @@ function expandGroupNode(state: any, group_to_expand: number, group_to_expand_id
                     target: target_group_id,
                     value: link.value
                 }
-                if(group_map.get(target_group.group)) new_link.target = link.target
+                if (group_map.get(target_group.group)) new_link.target = link.target
                 new_links.push(new_link)
             }
 
             for (const old_link of old_external_links) {
                 console.log(old_link)
-                if(old_link.target === link.target){
+                if (old_link.target === link.target) {
                     const new_link = {
                         source: old_link.source,
                         target: link.target,
@@ -255,6 +254,7 @@ interface groupDataType {
     size: number;
     nodes: [];
 }
+
 interface nodeType {
     id: string;
     group: number;
@@ -262,7 +262,10 @@ interface nodeType {
     name?: string;
     val?: number;
 }
-function createNetworkGraph(data: { nodes: any; links?: { source: string; target: string; value: number; }[]; }, collapsedGroups: number[]){
+function createNetworkGraph(data: {
+    nodes: any;
+    links?: { source: string; target: string; value: number; }[];
+}, collapsedGroups: number[]) {
 
     var group_map = {},
         node_map = {},    // node map
@@ -270,30 +273,36 @@ function createNetworkGraph(data: { nodes: any; links?: { source: string; target
         nodes = [], // output nodes
         links: never[] = []; // output links
 
-        var nodeToGroupMap = new Map<any, any>()
-        var groupNodeToGroupId = new Map<any, any>()
+    var nodeToGroupMap = new Map<any, any>()
+    var groupNodeToGroupId = new Map<any, any>()
     // determine nodes
     for (var i = 0; i < data.nodes.length; i++) {
-            var node:nodeType = data.nodes[i],
-                node_group_index: number = node.group
+        var node: nodeType = data.nodes[i],
+            node_group_index: number = node.group
 
-            // @ts-ignore
-        var new_group = group_map[node_group_index] || {id: "group" + node_group_index, group: node_group_index, nodeVal: 0, nodeRelSize: 8, nodes: []};
-            // @ts-ignore
-            group_map[node_group_index] = group_map[node_group_index] || new_group;
+        // @ts-ignore
+        var new_group = group_map[node_group_index] || {
+            id: "group" + node_group_index,
+            group: node_group_index,
+            nodeVal: 0,
+            nodeRelSize: 8,
+            nodes: []
+        };
+        // @ts-ignore
+        group_map[node_group_index] = group_map[node_group_index] || new_group;
 
-            // size zero is a collapsed cluster or a new cluster
-            if (new_group.nodeVal === 0) {
-                // if new cluster, add to set and position at centroid of leaf nodes
-                // @ts-ignore
-                node_map[i] = nodes.length;
-                nodes.push(new_group);
-                groupNodeToGroupId.set(new_group.group, new_group.id);
-            }
+        // size zero is a collapsed cluster or a new cluster
+        if (new_group.nodeVal === 0) {
+            // if new cluster, add to set and position at centroid of leaf nodes
             // @ts-ignore
-            new_group.nodes.push(node);
-            new_group.nodeVal += 1;
-            nodeToGroupMap.set(data.nodes[i].id, data.nodes[i].group);
+            node_map[i] = nodes.length;
+            nodes.push(new_group);
+            groupNodeToGroupId.set(new_group.group, new_group.id);
+        }
+        // @ts-ignore
+        new_group.nodes.push(node);
+        new_group.nodeVal += 1;
+        nodeToGroupMap.set(data.nodes[i].id, data.nodes[i].group);
     }
 
     // for (const groupMapKey in group_map) {
@@ -302,23 +311,21 @@ function createNetworkGraph(data: { nodes: any; links?: { source: string; target
 
     //@ts-ignore
     for (var k = 0; k < data.links.length; k++) {
+        // @ts-ignore
+        let source: string = groupNodeToGroupId.get(nodeToGroupMap.get(data.links[k].source));
+        // @ts-ignore
+        let target: string = groupNodeToGroupId.get(nodeToGroupMap.get(data.links[k].target));
 
-
-            // @ts-ignore
-            let source: string = groupNodeToGroupId.get(nodeToGroupMap.get(data.links[k].source));
-            // @ts-ignore
-            let target: string = groupNodeToGroupId.get(nodeToGroupMap.get(data.links[k].target));
-
-            // if expanded u is nodemap value of e.source.name, e is a data.link value
-            // @ts-ignore
-            const i = (source < target ? source + "|" + target : target + "|" + source);
-            // @ts-ignore
-            const link = link_map[i] || (link_map[i] = {
-                source: source,
-                target: target,
-                value: 0
-            });
-            link.value += 1;
+        // if expanded u is nodemap value of e.source.name, e is a data.link value
+        // @ts-ignore
+        const i = (source < target ? source + "|" + target : target + "|" + source);
+        // @ts-ignore
+        const link = link_map[i] || (link_map[i] = {
+            source: source,
+            target: target,
+            value: 0
+        });
+        link.value += 1;
     }
     for (const linkMapKey in link_map) {
         // @ts-ignore
@@ -332,72 +339,119 @@ function createNetworkGraph(data: { nodes: any; links?: { source: string; target
 
 const graphContextInitializer = (initialState: any) => {
     // @ts-ignore
-    let expanded_map= new Map<number, boolean>();
+    let expanded_map = new Map<number, boolean>();
 
     for (let i = 0; i < initialGraph.nodes.length; i++) {
         const node = initialGraph.nodes[i];
-        if(!expanded_map.has(node.group)) expanded_map.set(node.group, false);
+        if (!expanded_map.has(node.group)) expanded_map.set(node.group, false);
     }
 
     // @ts-ignore
     let nodes = []
     let edges = []
 
-    const graph = clusters(Graph, {
-        order: 50,
-        size: 75,
-        clusters: 10,
-    })
+    function expand(order: number, size: number, cluster: number) {
 
-    graph.forEachNode( node => {
-        graph.updateNode(node, attributes => {
-            return {
-                ...attributes,
-                id: node,
-                name: node + 'name',
-                val: 1,
-                nodeVisibility: true
-            }
+        const graph = clusters(Graph, {
+            order: order,
+            size: size,
+            clusters: cluster,
         })
-    })
-
-    graph.forEachNode( node => {
-        nodes.push(graph.getNodeAttributes(node))
-    })
-
-    // graph.forEachEdge(edge => {
-    //     console.log(edge)
-    // })
-
-
-    const graphology_test = {
+        const cluster_map = {}
         // @ts-ignore
-        nodes: nodes,
+        const link_map = []
         // @ts-ignore
-        links: []
+        graph.forEachNode(node => {
+            const node_attributes = graph.getNodeAttributes(node);
+            // @ts-ignore
+            var cluster = cluster_map[node_attributes.cluster] || {
+                cluster_nuber: node_attributes.cluster,
+                cluster_size: 0,
+                cluster_visibility: false,
+                nodes: [],
+            }
+
+            // @ts-ignore
+            cluster_map[node_attributes.cluster] = cluster;
+
+            graph.updateNode(node, (attributes: any) => {
+                return {
+                    ...attributes,
+                    id: node,
+                    name: node + 'member',
+                    val: 1,
+                    nodeVisibility: true,
+                    cluster: cluster.cluster_nuber
+                }
+            })
+
+            cluster.nodes.push(node);
+            cluster.cluster_size += 1;
+
+        })
+
+        // create a node for each cluster
+        for (const clusterMapKey in cluster_map) {
+            graph.addNode(graph.order + 1, {
+                id: graph.order + 1,
+                name: graph.order + 1 + 'cluster',
+                // @ts-ignore
+                val: cluster_map[clusterMapKey].cluster_size,
+                nodeVisibility: false,
+                // @ts-ignore
+                cluster_members: cluster_map[clusterMapKey].nodes
+            })
+        }
+
+        graph.forEachEdge(
+            // @ts-ignore
+            (edge, attributes, source, target, sourceAttributes, targetAttributes) => {
+                link_map.push({
+                    source: source,
+                    target: target,
+                    linkVisibility: true
+                })
+            });
+
+        // value of a link is a source cluster, target cluster, visibility
+        // visibility can be pointers onto nodes?
+        // if target and source are different clusters create a link in a map, remove duplicates?
+
+        // @ts-ignore
+        graph.forEachNode(node => {
+            nodes.push(graph.getNodeAttributes(node))
+        })
+        // @ts-ignore
+        console.log(nodes)
+        // @ts-ignore
+        console.log(link_map)
+        return  {
+            // @ts-ignore
+            nodes: nodes,
+            // @ts-ignore
+            links: link_map
+        }
     }
 
     return {
         initialGraphData: initialGraph,
-        graph: graph,
-        force_graph: createNetworkGraph(initialGraph, []),
+        force_graph: expand(10000,20000,300),
         expanded_graphs: expanded_map
     }
 }
 
 // @ts-ignore
-export const GraphProvider: FC<Props> = ({ children }) => {
+export const GraphProvider: FC<Props> = ({children}) => {
 
     function initialArgs(): any {
-        return {
-        };
+        return {};
     }
 
-    const [state, dispatch] = useReducer(graphDataReducer, initialArgs() , graphContextInitializer);
+    const [state, dispatch] = useReducer(graphDataReducer, initialArgs(), graphContextInitializer);
     return (
-        <GraphContext.Provider value={ state }>
-            <GraphDispatchContext.Provider value={ dispatch }>
-                { children }
+        <GraphContext.Provider value={state}>
+            <GraphDispatchContext.Provider value={dispatch}>
+                {children}
             </GraphDispatchContext.Provider>
         </GraphContext.Provider>
     );

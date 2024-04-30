@@ -19,7 +19,7 @@ function Graph({}, ref: any) {
     const graphContext = useContext(GraphContext);
 
     const handleClick = useCallback((node: { id: string; x: number; y: number; z: number; collapsed: boolean; }) => {
-        if(node.id.includes("group")) {
+        if (node.id.includes("group")) {
             dispatch({
                 type: 'expand_graph_node',
                 payload: node,
@@ -34,7 +34,8 @@ function Graph({}, ref: any) {
     }, [dispatch]);
 
     const test = useCallback((node: {
-        nodeVisibility: any; id: string; x: number; y: number; z: number; collapsed: boolean; }) => {
+        nodeVisibility: any; id: string; x: number; y: number; z: number; collapsed: boolean;
+    }) => {
         graphContext.graph.setNodeAttribute(node.id, 'nodeVisibility', !node.nodeVisibility);
     }, []);
 
@@ -43,21 +44,21 @@ function Graph({}, ref: any) {
     }, []);
 
     return (
-            <ForceGraph3D
-                ref={ref}
-                graphData={graphContext.force_graph}
-                nodeLabel="id"
-                // nodeVisibility={(node) => {
-                //     return node.nodeVisibility;
-                // }}
-                nodeVal="nodeVal"
-                nodeAutoColorBy="group"
-                onNodeClick={handleClick}
-                // onNodeRightClick={(node) => {
-                //     node.nodeVisibility = node.nodeVisibility!;
-                // }}
-                // onLinkClick={linkClick}
-            />
+        <ForceGraph3D
+            ref={ref}
+            graphData={graphContext.force_graph}
+            nodeLabel="name"
+            nodeVisibility={(node) => {
+                return node.nodeVisibility;
+            }}
+            nodeVal="nodeVal"
+            nodeAutoColorBy="cluster"
+            onNodeClick={handleClick}
+            // onNodeRightClick={(node) => {
+            //     node.nodeVisibility = node.nodeVisibility!;
+            // }}
+            // onLinkClick={linkClick}
+        />
     );
 }
 
