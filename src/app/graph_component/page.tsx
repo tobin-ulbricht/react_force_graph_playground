@@ -3,8 +3,8 @@
 import ForceGraph3D from "react-force-graph-3d";
 import React, {useCallback, useContext} from 'react';
 
-import {GraphContext, GraphDispatchContext} from '../providers/GraphContextProvider';
-
+import {GraphContext, GraphDispatchContext} from '../provider/GraphContextProvider';
+// import data from "../data/miserables.json"
 /**
  *
  * @param ref
@@ -19,12 +19,16 @@ function Graph({}, ref: any) {
     const graphContext = useContext(GraphContext);
 
     const handleClick = useCallback((node: { id: string; x: number; y: number; z: number; collapsed: boolean; }) => {
+        // does this node.id really work, for les Miserabl yes, for generated Graph?
+        // TODO Build a ER Diagramm where I can find what Info I need for which functions
         if (node.id.includes("group")) {
+            console.log("Disp. Expand Community")
             dispatch({
                 type: 'expand_graph_node',
                 payload: node,
             })
         } else {
+            console.log("Disp. Collapse Community")
             dispatch({
                 type: 'collapse_graph_node',
                 payload: node,
@@ -33,19 +37,11 @@ function Graph({}, ref: any) {
 
     }, [dispatch]);
 
-    const test = useCallback((node: {
-        nodeVisibility: any; id: string; x: number; y: number; z: number; collapsed: boolean;
-    }) => {
-        graphContext.graph.setNodeAttribute(node.id, 'nodeVisibility', !node.nodeVisibility);
-    }, []);
-
-    const linkClick = useCallback((node: { id: string; x: number; y: number; z: number; collapsed: boolean; }) => {
-        console.log(node)
-    }, []);
 
     return (
         <ForceGraph3D
             ref={ref}
+            // @ts-ignore
             graphData={graphContext.force_graph}
             nodeLabel="name"
             nodeVisibility={(node) => {

@@ -1,13 +1,15 @@
 'use client'
 
 import React, {lazy, useRef} from 'react';
-import {GraphProvider} from './providers/GraphContextProvider';
+import {GraphProvider} from './app/provider/GraphContextProvider';
 // import logo from './logo.svg';
 import './App.css';
 
-const Graph = lazy(() => import('./graph/page'))
+const Graph = lazy(() => import('./app/graph_component/page'))
 
 function App() {
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fgRef = useRef<any | null>();
 
   return (
